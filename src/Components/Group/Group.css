@@ -1,0 +1,44 @@
+.container {
+  background-color: map(colors, productos, opinion);
+  width: 2em;
+  height: 2em;
+  display: block;
+  //position: absolute;
+  border-radius: 50%;
+  transition: .4s;
+  //float: right;
+}
+
+.size-1 {
+  width: 2em;
+  height: 2em;
+}
+
+.size-2 {
+  width: 2.4em;
+  height: 2.4em;
+}
+
+.size-3 {
+  width: 2.75em;
+  height: 2.75em;
+}
+
+.size-4 {
+  width: 3em;
+  height: 3em;
+}
+
+.size-5 {
+  width: 3.5em;
+  height: 3.5em;
+}
+
+.inside {
+  background: red;
+  //float: left;
+}
+
+.outside {
+  align-self: flex-end;
+}

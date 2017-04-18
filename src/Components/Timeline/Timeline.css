@@ -1,0 +1,18 @@
+.container {
+  background-color: map(colors, secondary, light);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 1em 0.25em;
+}
+
+.button {
+  font-family: map(fonts, family-sans);
+  color: map(colors, primary, base);
+  transform: rotate(-45deg);
+  cursor: pointer;
+}
+
+.current {
+  color: red;
+}

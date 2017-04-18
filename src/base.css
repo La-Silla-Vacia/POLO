@@ -1,0 +1,16 @@
+.container {
+  font-family: map(fonts, family-sans);
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  min-height: 25em;
+  overflow: hidden;
+  position: relative;
+  border: 1px dashed map(colors, secondary, base);
+}
+
+.groups {
+  position: relative;
+  display: block;
+  flex-grow: 1;
+}
