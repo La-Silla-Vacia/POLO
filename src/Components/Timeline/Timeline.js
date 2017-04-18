@@ -20,21 +20,25 @@ export default class Timeline extends Component {
       <div className={s.container}>
         <button
           className={cx(s.button, {[s.current]: current === 2005 })}
+          id="to2005"
           onClick={this.handleClick.bind(this, 2005)}>
           2005
         </button>
         <button
           className={cx(s.button, {[s.current]: current === 2009 })}
+          id="to2009"
           onClick={this.handleClick.bind(this, 2009)}>
           2009
         </button>
         <button
           className={cx(s.button, {[s.current]: current === 2011 })}
+          id="to2011"
           onClick={this.handleClick.bind(this, 2011)}>
           2011
         </button>
         <button
           className={cx(s.button, {[s.current]: current === 2017 })}
+          id="to2017"
           onClick={this.handleClick.bind(this, 2017)}>
           2017
         </button>

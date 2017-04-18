@@ -6,36 +6,7 @@ import Timeline from './Components/Timeline/Timeline';
 
 import s from './base.css';
 
-const clusters = new Array(3),
-  padding = 1.5, // separation between same-color circles
-  clusterPadding = 6, // separation between different-color circles
-  maxRadius = 12,
-
-  insideColor = 'blue',
-  outsideColor = 'red',
-  goneColor = 'grey';
-
-const color = d3.scale.category10()
-  .domain(d3.range(3));
-
-// Move d to be adjacent to the cluster node.
-function cluster(alpha) {
-  return function (d) {
-    var cluster = clusters[d.cluster];
-    if (cluster === d) return;
-    var x = d.x - cluster.x,
-      y = d.y - cluster.y,
-      l = Math.sqrt(x * x + y * y),
-      r = d.radius + cluster.radius;
-    if (l != r) {
-      l = (l - r) / l * alpha;
-      d.x -= x *= l;
-      d.y -= y *= l;
-      cluster.x += x;
-      cluster.y += y;
-    }
-  };
-}
+// const claraLopez = require('./images/claraLopez.jpg');
 
 
 export default class Base extends Component {
@@ -60,7 +31,14 @@ export default class Base extends Component {
 
     return (
       <div className={s.container}>
-        <div id="lsvi-base">
+        <svg style={{opacity: 0, pointerEvents: 'none', position: 'absolute'}} id="mySvg" width="80" height="80">
+          <defs id="mdef">
+            <pattern id="image" x="0" y="0" height="100" width="100">
+              <image x="0" y="0" width="100" height="100" xlinkHref="http://www.e-pint.com/epint.jpg" />
+            </pattern>
+          </defs>
+        </svg>
+        <div id="lsvi-base" data-balloon="Whats up!" data-balloon-pos="left">
           <button id="btn" type="button" value="Add node">Change year</button>
         </div>
         <Timeline callback={this.changeYear} current={state.year} />
