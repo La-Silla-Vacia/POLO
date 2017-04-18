@@ -11,17 +11,13 @@ const clusters = new Array(3),
   clusterPadding = 6, // separation between different-color circles
   maxRadius = 12,
 
-insideColor = 'blue',
-outsideColor = 'red',
-goneColor = 'grey';
+  insideColor = 'blue',
+  outsideColor = 'red',
+  goneColor = 'grey';
 
 const color = d3.scale.category10()
   .domain(d3.range(3));
 
-let nodes = [],
-
-  width = 500,
-  height = 500;
 // Move d to be adjacent to the cluster node.
 function cluster(alpha) {
   return function (d) {
@@ -41,33 +37,6 @@ function cluster(alpha) {
   };
 }
 
-// Resolves collisions between d and all other circles.
-function collide(alpha) {
-  var quadtree = d3.geom.quadtree(nodes);
-  return function (d) {
-    var r = d.radius + maxRadius + Math.max(padding, clusterPadding),
-      nx1 = d.x - r,
-      nx2 = d.x + r,
-      ny1 = d.y - r,
-      ny2 = d.y + r;
-    quadtree.visit(function (quad, x1, y1, x2, y2) {
-      if (quad.point && (quad.point !== d)) {
-        var x = d.x - quad.point.x,
-          y = d.y - quad.point.y,
-          l = Math.sqrt(x * x + y * y),
-          r = d.radius + quad.point.radius + (d.cluster === quad.point.cluster ? padding : clusterPadding);
-        if (l < r) {
-          l = (l - r) / l * alpha;
-          d.x -= x *= l;
-          d.y -= y *= l;
-          quad.point.x += x;
-          quad.point.y += y;
-        }
-      }
-      return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-    });
-  };
-}
 
 export default class Base extends Component {
 
@@ -115,67 +84,43 @@ export default class Base extends Component {
       });
 
       this.setState({ groups });
-      this.createGroups();
+      // this.createGroups();
+      this.updateChart()
       console.log(groups);
     }).catch((ex) => {
       console.log('parsing failed', ex)
     })
   }
 
-  getSize(scale) {
-    switch (scale) {
-      case 1:
-        return 40;
-        break;
-      case 2:
-        return 45;
-        break;
-      case 3:
-        return 50;
-        break;
-      case 4:
-        return 55;
-        break;
-      case 5:
-        return 65;
-        break;
-      default:
-        return 10
-    }
+  componentDidMount() {
+    this.svg = d3.select("#lsvi-graphic-inner svg");
+    this.setState({ width: this.props.meta.width(), height: 500 })
   }
 
-  createGroups() {
-    const el = this.props.meta;
-    const year = this.state.year;
-    const items = this.state.groups;
+  updateChart() {
+    const { width, height, year, groups } = this.state;
 
-    width = el.width();
-    height = 500;
-
-
-    nodes = items.map((item, index) => {
-      // console.log('aa', item[year]);
+    // Format the date for our graph
+    this.nodes = groups.map((item) => {
+      // get the data of the correct year
       const currentYearData = item[year];
-      const i = currentYearData.position,
-        r = this.getSize(currentYearData.size),
-        d = { cluster: i, radius: r, name: item.name };
-      if (!clusters[i] || (r > clusters[i].radius)) clusters[i] = d;
-      // console.log(d);
+      const category = currentYearData.position,
+        radius = this.getSize(currentYearData.size),
+        d = { cluster: category, radius: radius, name: item.name };
+      if (!clusters[category] || (radius > clusters[category].radius)) clusters[category] = d;
       return d;
     });
 
     const force = d3.layout.force()
-      .nodes(nodes)
+      .nodes(this.nodes)
       .size([width, height])
       .gravity(.02)
       .charge(0)
       .on("tick", tick)
       .start();
 
-    const svg = d3.select("#lsvi-graphic-inner svg").append("svg");
-
-    const circle = svg.selectAll("circle")
-      .data(nodes)
+    const circle = this.svg.selectAll("circle")
+      .data(this.nodes)
       .enter()
       .append("circle")
       .attr("r", function (d) {
@@ -199,6 +144,58 @@ export default class Base extends Component {
         .attr("cy", (d) => {
           return d.y;
         });
+    }
+
+    const nodes = this.nodes
+
+    // Resolves collisions between d and all other circles.
+    function collide(alpha) {
+      var quadtree = d3.geom.quadtree(nodes);
+      return function (d) {
+        var r = d.radius + maxRadius + Math.max(padding, clusterPadding),
+          nx1 = d.x - r,
+          nx2 = d.x + r,
+          ny1 = d.y - r,
+          ny2 = d.y + r;
+        quadtree.visit(function (quad, x1, y1, x2, y2) {
+          if (quad.point && (quad.point !== d)) {
+            var x = d.x - quad.point.x,
+              y = d.y - quad.point.y,
+              l = Math.sqrt(x * x + y * y),
+              r = d.radius + quad.point.radius + (d.cluster === quad.point.cluster ? padding : clusterPadding);
+            if (l < r) {
+              l = (l - r) / l * alpha;
+              d.x -= x *= l;
+              d.y -= y *= l;
+              quad.point.x += x;
+              quad.point.y += y;
+            }
+          }
+          return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+        });
+      };
+    }
+  }
+
+  getSize(scale) {
+    switch (scale) {
+      case 1:
+        return 40;
+        break;
+      case 2:
+        return 45;
+        break;
+      case 3:
+        return 50;
+        break;
+      case 4:
+        return 55;
+        break;
+      case 5:
+        return 65;
+        break;
+      default:
+        return 10
     }
   }
 
@@ -225,50 +222,15 @@ export default class Base extends Component {
 
   changeYear(year) {
     this.setState({ year });
-    this.createGroups();
+    // this.createGroups();
+    this.updateChart()
     return;
-    // const year = this.state.year;
-    const items = this.state.groups;
 
-    const svg = d3.select("#lsvi-graphic-inner svg").transition();
-    // console.log(svg);
-
-    nodes = items.map((item, index) => {
-      // console.log('aa', item[year]);
-      const currentYearData = item[year];
-      const i = currentYearData.position,
-        r = this.getSize(currentYearData.size),
-        d = { cluster: i, radius: r, name: item.name };
-      console.log('r', r);
-      if (!clusters[i] || (r > clusters[i].radius)) clusters[i] = d;
-      // console.log(d);
-      return d;
-    });
-
-    // const force = d3.layout.force()
-    //   .nodes(nodes)
-    //   .size([width, height])
-    //   .gravity(.02)
-    //   .charge(0)
-    //   .on("tick", tick)
-    //   .start();
-    // // console.log(color);
-
-    // svg.selectAll("circle").map((circles) => {
-    //   circles.map((circle, index) => {
-    //     const node = nodes[index];
-    //     console.log(node);
-    //     if (node.cluster === 1) circle.style.fill = insideColor;
-    //     if (node.cluster === 2) circle.style.fill = outsideColor;
-    //     if (node.cluster === '') circle.style.fill = goneColor;
-    //     circle.r = node.radius;
-    //   })
-    // });
 
     let i = 0,
-    j = 0;
+      j = 0;
     const circle = svg.selectAll("circle")
-      .data(nodes)
+      .data(this.nodes)
       .attr("r", (d) => {
         const node = nodes[i];
         i++;
@@ -335,7 +297,7 @@ export default class Base extends Component {
     return (
       <div className={s.container}>
         <div id="lsvi-graphic-inner" className={s.groups}>
-          <svg width={width} height={height} />
+          <svg width={this.state.width} height={this.state.height} />
         </div>
         <Timeline callback={this.changeYear} current={state.year} />
       </div>
