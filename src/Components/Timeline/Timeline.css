@@ -8,11 +8,12 @@
 
 .button {
   font-family: map(fonts, family-sans);
-  color: map(colors, primary, base);
-  transform: rotate(-45deg);
   cursor: pointer;
+  background-color: map(colors, red, caribe);
+  padding: 0.25em 1em;
+  color: #fff;
 }
 
 .current {
-  color: red;
+  background-color: map(colors, primary, base);
 }
