@@ -31,10 +31,10 @@ export default class Base extends Component {
 
     return (
       <div className={s.container}>
-        <svg style={{opacity: 0, pointerEvents: 'none', position: 'absolute'}} id="mySvg" width="80" height="80">
-          <defs id="mdef">
-            <pattern id="image" x="0" y="0" height="100" width="100">
-              <image x="0" y="0" width="100" height="100" xlinkHref="http://www.e-pint.com/epint.jpg" />
+        <svg style={{opacity: 0, pointerEvents: 'none', position: 'absolute'}} id="mySvg" width="110" height="110">
+          <defs>
+            <pattern id="img_claraLóPez" x="0" y="0" height="100%" width="100%" patternContentUnits="objectBoundingBox" viewBox="0 0 1 1">
+              <image x="0" y="0" width="1" height="1" xlinkHref="https://github.com/La-Silla-Vacia/POLO/raw/master/src/images/claraLopez.jpg" />
             </pattern>
           </defs>
         </svg>
