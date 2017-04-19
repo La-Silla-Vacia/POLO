@@ -13,6 +13,9 @@
   background-color: map(colors, red, caribe);
   padding: 0.25em 1em;
   color: #fff;
+  @media screen and (max-width: 800px) {
+    padding: 0.25em;
+  }
 }
 
 .current {

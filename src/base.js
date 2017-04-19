@@ -46,6 +46,8 @@ export default class Base extends Component {
     const text = this.getText();
     return (
       <div className={s.container}>
+        <style type="text/css" dangerouslySetInnerHTML={{__html: '@media (min-width: 1200px) {.article-content.col-sm-12.col-md-8 {width: 85%;}}.field-item>p,.img-container {max-width: 713px; }'}} />
+
         <svg style={{ opacity: 0, pointerEvents: 'none', position: 'absolute' }} id="mySvg" width="110" height="110">
           <defs>
             <pattern id="img_claraLóPez" x="0" y="0" height="100%" width="100%" patternContentUnits="objectBoundingBox"
@@ -76,7 +78,7 @@ export default class Base extends Component {
             <pattern id="img_lucho" x="0" y="0" height="100%" width="100%" patternContentUnits="objectBoundingBox"
                      viewBox="0 0 1 1">
               <image x="0" y="0" width="1" height="1"
-                     xlinkHref="https://github.com/La-Silla-Vacia/POLO/raw/master/src/images/LuisEduardoGarzon.jpg" />
+                     xlinkHref="https://github.com/La-Silla-Vacia/POLO/raw/master/src/images/luisEduardoGarzon.jpg" />
             </pattern>
           </defs>
         </svg>

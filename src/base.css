@@ -7,6 +7,9 @@
   overflow: hidden;
   position: relative;
   border: 1px dashed map(colors, secondary, base);
+  @media screen and (max-width: 800px) {
+    flex-direction: column-reverse;
+  }
 }
 
 .groups {
@@ -22,22 +25,36 @@
   float: left;
   padding: 1em;
   & p {
-    font-size: 16px;
+    font-size: 14px !important;
+  }
+
+  @media screen and (max-width: 800px) {
+    width: 100%;
   }
 }
 
 .img_container {
   width: 100%;
+  @media screen and (max-width: 800px) {
+    height: 300px;
+  }
 }
 
 .flex {
   display: flex;
   height: 500px;
+
+  @media screen and (max-width: 800px) {
+    display: block;
+    height: auto;
+  }
 }
 
 .legend {
   position: absolute;
   padding: 1em;
+  pointer-events: none;
+
   & ul {
     list-style: none;
     padding: 0;
